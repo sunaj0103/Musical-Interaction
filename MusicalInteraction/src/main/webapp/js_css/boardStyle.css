@@ -1,0 +1,149 @@
+@CHARSET "UTF-8";
+
+.boardTitle {
+	margin: 35px 10px;
+	text-align: center;
+}
+
+.boardTitle a {
+	text-decoration: none;
+	color: #000;
+}
+
+/* #page {
+	width: 50%;	
+	margin: auto;
+}
+
+.pageCenter {
+	margin: auto;
+	width: 90%;
+	background: pink;
+} */
+
+th:nth-child(1), td:nth-child(1) {
+	width: 10%;
+	text-align: center;
+}
+
+th:nth-child(2) {
+	width: 50%
+}
+
+td:nth-child(2) {
+	padding-left: 15px;
+}
+
+th:nth-child(3), td:nth-child(3) {
+	width: 20%;
+	text-align: center;
+}
+
+th:nth-child(4), td:nth-child(4) {
+	width: 10%;
+	text-align: center;
+}
+
+th:nth-child(5), td:nth-child(5) {
+	width: 10%;
+	text-align: center;
+}
+
+th {
+	text-align: center;
+}
+
+/* 
+.boardInput>ul, .boardInput>ul>li {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none
+}
+
+.viewHeight {
+	height: 700px;
+}
+
+.viewborderTop {
+	height: 70px;
+	line-height: 70px;
+	font-size: 18px;
+	font-weight: bold;
+	border-top: 1px solid #0094ff;
+}
+
+.viewborderEmpty {
+	height: 10px;	
+}
+
+.viewborder {
+	height: 50px;
+	line-height: 50px;
+	font-size: 15px;
+	font-weight: bold;	
+	border-top: 1px solid #00aaff;
+	border-bottom: 1px solid #00aaff;
+}
+
+.viewborderContent {
+	padding: 20px 30px;
+	height: 380px;
+	font-size: 13px;
+	text-align: left;
+	overflow: hidden;
+	overflow-y: scroll;
+	word-wrap: break-word;
+	border-bottom: 1px solid #00aaff;
+}
+
+select[name='searchOption'] {
+	height: 27px;
+}
+
+
+#boardList {
+	width: 900px;
+	height:450px;
+	margin-top: 30px;
+}
+
+#boardList li {
+	float: left;
+	height: 40px;
+	line-height: 40px;
+	white-space: nowrap;
+	border-bottom: 1px solid #0094ff;
+	text-overflow: ellipsis;
+	overflow: hidden
+}
+
+.boardList1 {
+	width: 150px;
+	text-align: center;
+}
+
+.boardList2 {
+	width: 290px;
+	text-align: left;
+	padding-left: 10px
+}
+
+.boardTitle {
+	background-color: #0094ff;
+	text-align: center;
+	font-size: 13px;
+	font-weight: bold;
+	color: #fff;
+}
+
+.boardTop {
+	color: #0094ff;
+	font-weight: bold;
+}
+
+.clearDiv {
+	clear: both;
+	float: none;
+	width: 100%;
+	height: 40px;
+} */

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+          PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musical.web.board.BoardDAOInterface">
+	<insert id="insertBoard" parameterType="com.musical.web.board.BoardVO">
+		<selectKey keyProperty="board_idx" resultType="Integer" order="BEFORE">
+			SELECT NVL(MAX(BOARD_IDX),0)+1 FROM MI_BOARD
+		</selectKey>
+		INSERT INTO MI_BOARD( BOARD_IDX
+						    , WRITER
+						    , SUBJECT
+						    , CONTENT
+						    , HIT_CNT
+						    , DEL_YN
+						    , DATE_CREATED
+						    , DATE_MODIFIED) 
+					  VALUES( #{board_idx}
+					        , #{writer}
+					        , #{subject}
+					        , #{content}
+					        , 0
+					        , 'N'
+					        , SYSDATE
+					        , SYSDATE)
+					   
+	</insert>
+	
+	<insert id="fileUpload" parameterType="com.musical.web.board.FileVO">
+		INSERT INTO MI_FILE( FILE_IDX
+						   , BOARD_IDX
+						   , ORI_FILE_NAME
+						   , STORED_FILE_NAME
+						   , DEL_YN ) 
+					  VALUES((SELECT NVL(MAX(FILE_IDX),0)+1 FROM MI_FILE)
+					       , #{board_idx}
+					       , #{ori_file_name}
+					       , #{stored_file_name}
+					       , 'N')
+	</insert>
+	
+	<select id="recordCount" resultType="int">
+		SELECT COUNT(BOARD_IDX) FROM MI_BOARD
+	</select>
+	
+	<select id="recordSearchCount" parameterType="map" resultType="int">
+		SELECT COUNT(BOARD_IDX) FROM MI_BOARD
+		<include refid="search"></include>
+	</select>
+	
+	<select id="selectSearchList" parameterType="map" resultType="com.musical.web.board.BoardVO">
+		SELECT * 
+		FROM (SELECT * 
+			FROM (SELECT BOARD_IDX
+					   , WRITER
+					   , SUBJECT
+					   , CONTENT
+					   , HIT_CNT
+					   , DEL_YN
+					   , TO_CHAR(DATE_CREATED,'YY-MM-DD') DATE_CREATED
+					   , DATE_MODIFIED 
+				  FROM MI_BOARD
+				  <include refid="search"></include>
+				  ORDER BY BOARD_IDX DESC)
+		<![CDATA[			
+			WHERE ROWNUM<=#{pageVo.rownumEnd} 
+			ORDER BY BOARD_IDX ASC)			
+		WHERE ROWNUM<=#{pageVo.lastPageRecord} 
+		ORDER BY BOARD_IDX DESC
+		]]>
+	</select>
+	
+	<sql id="search">
+	    <choose>
+	        <!-- 검색옵션이 전체 검색일 경우 -->
+	        <when test="searchOption == 'all'">
+	            WHERE (WRITER like '%'||#{keyword}||'%'
+	            OR SUBJECT like '%'||#{keyword}||'%'
+	            OR CONTENT like '%'||#{keyword}||'%')
+	        </when>
+	        <!-- 전체 검색이 아닐 경우 -->
+	        <otherwise>
+	            WHERE ${searchOption} like '%'||#{keyword}||'%'
+	        </otherwise>
+	    </choose>
+	</sql>
+	
+	<select id="selectAllList" parameterType="com.musical.web.board.BoardPagingVO" resultType="com.musical.web.board.BoardVO">
+		<![CDATA[
+		SELECT * 
+		FROM (SELECT * 
+			FROM (SELECT BOARD_IDX
+					   , WRITER
+					   , SUBJECT
+					   , CONTENT
+					   , HIT_CNT
+					   , DEL_YN
+					   , TO_CHAR(DATE_CREATED,'YY-MM-DD') DATE_CREATED
+					   , DATE_MODIFIED 
+				  FROM MI_BOARD 
+				  ORDER BY BOARD_IDX DESC)
+			WHERE ROWNUM<=#{rownumEnd} 
+			ORDER BY BOARD_IDX ASC)			
+		WHERE ROWNUM<=#{lastPageRecord} 
+		ORDER BY BOARD_IDX DESC
+		]]>
+	</select>
+</mapper>
+ 
