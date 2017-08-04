@@ -1,6 +1,7 @@
 package com.musical.web.board;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,16 +40,18 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/boardWriteOk")
-	public String boardWriteOk(BoardVO vo, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	public String boardWriteOk(BoardVO vo, HttpServletRequest request, Model model
+			/*, RedirectAttributes redirectAttributes, HttpSession session*/) {
 		try {
 			BoardDAOInterface dao = sqlSession.getMapper(BoardDAOInterface.class);
 			
-			int boardInx = dao.insertBoard(vo);
+			dao.insertBoard(vo);
+			int boardInx = vo.getBoard_idx();
 			logger.info("boardInx: "+boardInx);
 			
 			//업로드 위치
 			String path = request.getSession().getServletContext().getRealPath("/upload");
-			logger.info("path: "+path);
+			//logger.info("path: "+path);
 			
 			MultipartFile multipartFile = null;
 			MultipartHttpServletRequest mr = (MultipartHttpServletRequest)request;
@@ -88,6 +94,7 @@ public class BoardController {
 						fv.setBoard_idx(boardInx);
 						fv.setOri_file_name(oriFileName);
 						fv.setStored_file_name(newFileName);
+						fv.setFile_size(multipartFile.getSize());
 						dao.fileUpload(fv);
 						
 					} catch (Exception e) {
@@ -96,12 +103,15 @@ public class BoardController {
 		 		}
 	        }
 			
-			redirectAttributes.addFlashAttribute("ok", "write");
-			return "redirect:/board";
+			//redirectAttributes.addFlashAttribute("ok", "write");
+			//session.setAttribute("stat", "write"); 
+			//return "redirect:/board";
+			model.addAttribute("stat", "write");
+			return "board/boardWrite";
 		} catch (Exception e) {
 			logger.error("Error at boardWriteOk", e);
-			redirectAttributes.addFlashAttribute("msg", "게시판 입력 에러");
-			return "redirect:/error";
+			model.addAttribute("msg", "게시판 입력 에러");
+			return "error";
 		}
 	}
 	
@@ -177,10 +187,13 @@ public class BoardController {
 			int board_idx = Integer.parseInt(request.getParameter("num"));			
 			dao.boardHitCount(board_idx);
 			BoardVO vo = dao.selectBoard(board_idx);
+			List<FileVO> fVo = dao.selectFileList(board_idx);
+			
 			//업로드 위치
 			String path = request.getSession().getServletContext().getRealPath("/upload");
 			
 			model.addAttribute("vo", vo);
+			model.addAttribute("fVo", fVo);
 			model.addAttribute("path", path);
 			return "board/boardDetail";
 			
@@ -191,14 +204,28 @@ public class BoardController {
 		}
 	}
 	
+	@RequestMapping("/downloadFile")
+	public void downloadFile(@RequestParam("oriFile") String oriFile, @RequestParam("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String path = request.getSession().getServletContext().getRealPath("/upload");
+		byte fileByte[] = FileUtils.readFileToByteArray(new File(path+"/"+fileName));
+	     
+	    response.setContentType("application/octet-stream");
+	    response.setContentLength(fileByte.length);
+	    response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(oriFile,"UTF-8")+"\";");
+	    response.setHeader("Content-Transfer-Encoding", "binary");
+	    response.getOutputStream().write(fileByte);
+	     
+	    response.getOutputStream().flush();
+	    response.getOutputStream().close();
+	}
+
 	@RequestMapping("/sheetMusic")
-	public String sheetMusic(Model model){
+	public String sheetMusic(HttpServletRequest request, Model model){
 		try {
-			String fileName = "compressed.tracemonkey-pldi-09.pdf";
+			String storedFileName = request.getParameter("stored_file_name");
+			String path = request.getSession().getServletContext().getRealPath("/upload");
 			
-			String url = "/web/js_css/pdfjs/web/" + fileName;
-			
-			model.addAttribute("url", url);
+			model.addAttribute("fileName", storedFileName);
 			return "board/sheetMusic";
 			
 		} catch (Exception e) {

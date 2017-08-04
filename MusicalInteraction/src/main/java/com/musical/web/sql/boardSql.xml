@@ -31,11 +31,13 @@
 						   , BOARD_IDX
 						   , ORI_FILE_NAME
 						   , STORED_FILE_NAME
+						   , FILE_SIZE
 						   , DEL_YN ) 
 					  VALUES((SELECT NVL(MAX(FILE_IDX),0)+1 FROM MI_FILE)
 					       , #{board_idx}
 					       , #{ori_file_name}
 					       , #{stored_file_name}
+					       , #{file_size}
 					       , 'N')
 	</insert>
 	
@@ -105,5 +107,34 @@
 		ORDER BY BOARD_IDX DESC
 		]]>
 	</select>
+	
+	<update id="boardHitCount" parameterType="int">
+		UPDATE MI_BOARD SET HIT_CNT=HIT_CNT+1 WHERE BOARD_IDX=#{board_idx}
+	</update>
+	
+	<select id="selectBoard" parameterType="int" resultType="com.musical.web.board.BoardVO">
+		SELECT BOARD_IDX
+			 , WRITER
+			 , SUBJECT
+			 , CONTENT
+			 , HIT_CNT
+			 , DEL_YN
+			 , TO_CHAR(DATE_CREATED,'YY-MM-DD') DATE_CREATED
+			 , TO_CHAR(DATE_MODIFIED,'YY-MM-DD') DATE_MODIFIED
+		FROM MI_BOARD 
+		WHERE BOARD_IDX=#{board_idx}
+	</select>
+	
+	<select id="selectFileList" parameterType="int" resultType="com.musical.web.board.FileVO">
+		SELECT FILE_IDX
+			 , BOARD_IDX
+			 , ORI_FILE_NAME
+			 , STORED_FILE_NAME
+			 , FILE_SIZE
+			 , DEL_YN
+		FROM MI_FILE
+		WHERE BOARD_IDX=#{board_idx} AND DEL_YN='N'
+	</select>
+	
 </mapper>
  

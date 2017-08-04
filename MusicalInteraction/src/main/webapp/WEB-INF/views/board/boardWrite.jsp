@@ -13,10 +13,11 @@
 <link href="/web/js_css/boardStyle.css" rel="stylesheet" type="text/css"/>
 <title>게시판</title>
 <script>
-var ok = "${ok}";
+var stat = "${stat}";
 
-if(ok == "write"){
-	alert("등록되었습니다.");
+if(stat == "write"){
+	alert("글이 등록되었습니다.");
+	location.href='/web/board';
 }
 
 var cnt = 1;

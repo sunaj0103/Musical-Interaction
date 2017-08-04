@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface BoardDAOInterface {
 	//게시판 글 업로드()
-	public int insertBoard(BoardVO vo);
+	public void insertBoard(BoardVO vo);
 	//파일 업로드
 	public void fileUpload(FileVO fv);
 	//Board 검색 총 레코드 수
@@ -20,6 +20,8 @@ public interface BoardDAOInterface {
 	public void boardHitCount(int board_idx);
 	//게시물 선택
 	public BoardVO selectBoard(int board_idx);
+	//파일 리스트
+	public List<FileVO> selectFileList(int board_idx);
 	
 	
 	

@@ -5,6 +5,7 @@ public class FileVO {
 	private int board_idx;
 	private String ori_file_name;
 	private String stored_file_name;
+	private long file_size;
 	private String del_yn;
 	
 	public int getFile_idx() {
@@ -30,6 +31,12 @@ public class FileVO {
 	}
 	public void setStored_file_name(String stored_file_name) {
 		this.stored_file_name = stored_file_name;
+	}
+	public long getFile_size() {
+		return file_size;
+	}
+	public void setFile_size(long file_size) {
+		this.file_size = file_size;
 	}
 	public String getDel_yn() {
 		return del_yn;

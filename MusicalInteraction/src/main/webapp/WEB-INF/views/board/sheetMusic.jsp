@@ -39,8 +39,8 @@
 * limitations under the License.
 */
 'use strict';
-var DEFAULT_URL = '${url}';
-;
+var fileName = '${fileName}';
+var DEFAULT_URL = "${pageContext.request.contextPath}/upload/"+fileName;
 console.log("DEFAULT_URL: "+DEFAULT_URL);
 var pdfjsWebLibs;
 {

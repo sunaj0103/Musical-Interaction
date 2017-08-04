@@ -10,15 +10,10 @@
 <link href="/web/js_css/boardStyle.css" rel="stylesheet" type="text/css"/>
 <title>게시판</title>
 <script>
-	var ok = "${ok}";
-	
-	if(ok == "write"){
-		alert("글이 등록되었습니다.");
-	}
-	if(ok == "edit"){
+	if("${stat}" == "edit"){
 		alert("글이 수정되었습니다.");
 	}
-	if(ok == "del"){
+	if("${stat}" == "del"){
 		alert("글이 삭제되었습니다.");
 	}
 	
