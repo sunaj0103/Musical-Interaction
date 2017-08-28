@@ -20,20 +20,7 @@ if(stat == "del"){
 }
 
 function downloadFile(oriFile, fileName){
-	//console.log(oriFile + ", " + fileName);
-	$.ajax({
-		url : "/web/downloadFile",
-	    type : 'POST',
-	    data : { oriFile: oriFile, fileName: fileName },
-	    success : function (data) {
-	    	console.log(data);
-	     	alert("done!");
-	    },
-	    error: function (error) {
-	    	console.log(error);
-	    }
-	});
-	
+	location.href="/web/downloadFile?oriFile=" + oriFile + "&fileName=" + fileName;
 }
 
 function delChk(){

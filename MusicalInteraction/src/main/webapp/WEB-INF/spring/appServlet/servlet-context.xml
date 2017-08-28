@@ -19,6 +19,7 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="order" value="2" /> 
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
@@ -49,4 +50,10 @@
         <beans:property name="maxUploadSize" value="52428800" />
         <beans:property name="maxInMemorySize" value="52428800" />
     </beans:bean>
+    
+    <beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+    	<beans:property name="order" value="0"/>
+    </beans:bean>    
+	<beans:bean id="downloadView" class="com.musical.web.util.DownloadView"/>
+
 </beans:beans>
